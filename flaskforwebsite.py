@@ -7,12 +7,12 @@
 
 from flask import Flask
 from flask import render_template
-import oracledb
 from pathlib import Path
+import json
 import os
 import sys
 import logging
-from flask import url_for
+from flask import url_for #can delete if not used
 import cx_Oracle
 import cgitb
 
@@ -54,7 +54,7 @@ def retreive():
         c.execute("select * from s2750126.trees")   #sql query
         data = c.fetchall()
         #present data 
-        column_headings = tuple()
+        column_headings = tuple() #need to fix
     title = "Roseburn Tree data - from an Oracle Database" ##DONT HAVE COLUMN HEADINGS
     return render_template('table1.html', table=data, title=title)
 
@@ -78,8 +78,15 @@ def map():
     with connect.cursor() as c:
             c.execute("select * from s2750126.trees")     #sql query
             data = c.fetchall()
-            print(data)
-    return render_template('leafletmarkers.html',markers=data)
+            for i in range(0,34):
+                print(data[i][2])       #remove later
+    with open('/home/s2762697/tigis/Rwebmap/static/boundary.json') as f:
+        geojson_data = json.load(f)   
+    #geojson_data=json.dumps(geojson_data)
+    return render_template('leafletmarkers.html',markers=data,geojson_data=json.dumps(geojson_data))
+
+
+    #return render_template('leafletmarkers_copy2.html',markers=data)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=55403 , debug=True)
