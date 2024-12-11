@@ -19,13 +19,12 @@
 
 <body>
 <div id="map"></div>
-<!-- uses static files called leafletmarkers.js.
-     (Alternatively javascript in the static file could be in this template if
-      approriate.) -->
 
 
+<!-- uses static files called leafletmarkers.js.-->
     <script src="{{ url_for('static', filename='leafletmarkers.js') }}"/></script>
 
+<!-- adds markers to map-->
     <script>
         {% for marker in markers %}
             L.circleMarker([{{ marker[3]}}, {{ marker[4]}}],
@@ -33,26 +32,23 @@
             color: 'black', //border color
             weight: 2,      //border size
             fillColor: 'white',     //fill color
-            fillOpacity: 1})
+            fillOpacity: 1})        //color strength
             .addTo(map)
             .bindPopup("<p> Dry-Weight Biomass (kg) = {{ marker[1] }}</p> Species: {{marker[2]}}");
         {% endfor %}
     </script>
 
-
-
-    //<script>
-    //    fetch('/data')
-    //        .then(response => response.json())
-    //        .then(data => {
-    //            L.geoJSON(data).addTo(map);
-    //        })
-    //    .catch(err => console.error(err));
-//
-    //    var geojsonData = {{ geojson_data|safe }};
-    //    L.geoJSON(geojsonData).addTo(map);
-    //   
-    //</script>
+<!-- adds shapefile polygon-->
+    <script>
+        fetch('/data')
+            .then(response => response.json())
+            .then(data => {
+                L.geoJSON(data).addTo(map);
+            })
+        .catch(err => console.error(err));  
+        var geojsonData = {{ geojson_data|safe }};
+        L.geoJSON(geojsonData).addTo(map);
+    </script>
 
 </body>
 </html>
